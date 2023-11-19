@@ -1,0 +1,59 @@
+import requests
+import json
+import win32com.client as TTS
+
+def repeat():
+    city = input("Enter the name of the city.\n")
+
+    url = f"https://api.weatherapi.com/v1/current.json?key=63114bfbc926467d96653028231310&q={city}"
+
+    r = requests.get(url)
+
+    WDic = json.loads(r.text)
+
+    wind_dir = WDic['current']['wind_dir']
+
+    wind_dir = "West-northwest"  if wind_dir == "WNW" else wind_dir
+    wind_dir = "North-northwest" if wind_dir == "NNW" else wind_dir
+    wind_dir = "North-northeast" if wind_dir == "NNE" else wind_dir
+    wind_dir = "East-northeast"  if wind_dir == "ENE" else wind_dir
+    wind_dir = "East-southeast"  if wind_dir == "ESE" else wind_dir
+    wind_dir = "South-southeast" if wind_dir == "SSE" else wind_dir
+    
+    wind_dir = "South-southwest" if wind_dir == "SSW" else wind_dir
+    wind_dir = "West-southwest"  if wind_dir == "WSW" else wind_dir
+    wind_dir = "West"            if wind_dir == "W"   else wind_dir
+    wind_dir = "East"            if wind_dir == "E"   else wind_dir
+    wind_dir = "South"           if wind_dir == "S"   else wind_dir
+    wind_dir = "North"           if wind_dir == "N"   else wind_dir
+    wind_dir = "South East"      if wind_dir == "SE"  else wind_dir
+    wind_dir = "South West"      if wind_dir == "SW"  else wind_dir
+    wind_dir = "North West"      if wind_dir == "NW"  else wind_dir
+    wind_dir = "North East"      if wind_dir == "NE"  else wind_dir
+
+    def Output(type,data):
+        print (type,data)  
+        speaker = TTS.Dispatch("SAPI.SpVoice")
+        speaker.Speak(f"{type}is{data}")
+
+    real_temp =  str(WDic['current']['temp_c']) + " celsius"
+    feel_temp =  str(WDic['current']['feelslike_c']) + " celsius"
+    
+    Output ("Actual Temprature :",     real_temp)
+    Output ("Temprature Feels like :", feel_temp)
+    Output ("Weather Condition :",     WDic['current']['condition']['text'])
+    Output ("Wind Speed :",            WDic['current']['wind_kph'])
+    Output ("Wind Direction :",        wind_dir)
+    
+repeat()
+
+while True:
+        command = input("Enter 'Continue' to run the the program again or type 'Exit' to exit from program.\n ")
+        if    (command =='Continue' or command =='continue' or command =='CONTINUE' ) :
+                    repeat()
+        elif    (command == "exit" or command == "EXIT" or command == "Exit") :
+                    exit()
+        else :
+            print("Invalid input, re-write your command") 
+            
+
