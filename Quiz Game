@@ -1,0 +1,71 @@
+import random
+
+def load_quiz():
+    quiz = [
+        {
+            'question': 'What is the capital of France?',
+            'choices': ['Berlin', 'Madrid', 'Paris', 'Rome'],
+            'correct_answer': 'Paris'
+        },
+        {
+            'question': 'Which planet is known as the Red Planet?',
+            'choices': ['Venus', 'Mars', 'Jupiter', 'Saturn'],
+            'correct_answer': 'Mars'
+        },
+        {
+            'question': 'What is the largest mammal in the world?',
+            'choices': ['Elephant', 'Blue Whale', 'Giraffe', 'Hippopotamus'],
+            'correct_answer': 'Blue Whale'
+        },
+        # Add more questions as needed
+    ]
+    return quiz
+
+def present_question(question):
+    print(question['question'])
+    for i, choice in enumerate(question['choices'], start=1):
+        print(f"{i}. {choice}")
+    user_answer = input("Enter the number of your choice: ")
+    return user_answer
+
+def evaluate_answer(user_answer, correct_answer):
+    return user_answer.lower() == correct_answer.lower()
+
+def display_feedback(is_correct, correct_answer):
+    if is_correct:
+        print("Correct! Well done!")
+    else:
+        print(f"Incorrect. The correct answer is: {correct_answer}")
+
+def play_quiz():
+    quiz = load_quiz()
+    score = 0
+
+    print("Welcome to the Quiz Game!")
+    print("You will be presented with multiple-choice questions.")
+
+    random.shuffle(quiz)  # Shuffle questions for variety
+
+    for question in quiz:
+        user_answer = present_question(question)
+        is_correct = evaluate_answer(user_answer, question['correct_answer'])
+        display_feedback(is_correct, question['correct_answer'])
+
+        if is_correct:
+            score += 1
+
+    print("\nQuiz Complete!")
+    print(f"Your final score is: {score} out of {len(quiz)}")
+
+def play_again():
+    return input("Do you want to play again? (yes/no): ").lower() == 'yes'
+
+def main():
+    while True:
+        play_quiz()
+        if not play_again():
+            print("Thank you for playing. Goodbye!")
+            break
+
+if __name__ == "__main__":
+    main()
