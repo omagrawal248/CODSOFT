@@ -1,0 +1,73 @@
+import json
+from datetime import datetime
+
+def load_tasks():
+    try:
+        with open("tasks.json", "r") as file:
+            tasks = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        tasks = []
+    return tasks
+
+def save_tasks(tasks):
+    with open("tasks.json", "w") as file:
+        json.dump(tasks, file, indent=2)
+
+def display_tasks(tasks):
+    if not tasks:
+        print("No tasks found.")
+    else:
+        print("Your To-Do List:")
+        for idx, task in enumerate(tasks, start=1):
+            print(f"{idx}. {task['title']} - {task['datetime']}")
+
+def add_task(tasks, title):
+    now = datetime.now()
+    task = {"title": title, "datetime": now.strftime("%Y-%m-%d %H:%M:%S")}
+    tasks.append(task)
+    save_tasks(tasks)
+    print("Task added successfully.")
+
+def remove_task(tasks, task_index):
+    try:
+        index = int(task_index) - 1
+        if 0 <= index < len(tasks):
+            deleted_task = tasks.pop(index)
+            save_tasks(tasks)
+            print(f"Task '{deleted_task['title']}' deleted successfully.")
+        else:
+            print("Invalid task index.")
+    except ValueError:
+        print("Invalid task index.")
+
+def main():
+    print("To-Do List Application")
+    print("----------------------")
+
+    tasks = load_tasks()
+
+    while True:
+        print("\nOptions:")
+        print("1. Show Tasks")
+        print("2. Add Task")
+        print("3. Delete Task")
+        print("4. Exit")
+
+        choice = input("Enter your choice (1-4): ")
+
+        if choice == '1':
+            display_tasks(tasks)
+        elif choice == '2':
+            title = input("Enter the task title: ")
+            add_task(tasks, title)
+        elif choice == '3':
+            task_index = input("Enter the index of the task to delete: ")
+            remove_task(tasks, task_index)
+        elif choice == '4':
+            print("Exiting the To-Do List Application. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 4.")
+
+if __name__ == "__main__":
+    main()
